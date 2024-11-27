@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { DashboardHeader } from "@/components/dashboard-header";
 import { MetricsOverview } from "@/components/metrics-overview";
 import { TokenPairsTable } from "@/components/token-pairs-table";
@@ -7,7 +9,24 @@ import { VolumeChart } from "@/components/charts/volume-chart";
 import { TvlDistribution } from "@/components/charts/tvl-distribution";
 import { demoDashboardStats, demoTokenPairs } from "@/lib/demo-data";
 
+// Default to false if not set
+const LIVE_MODE = process.env.NEXT_PUBLIC_LIVE_MODE === "true";
+
 export default function LiveDashboard() {
+  const router = useRouter();
+
+  useEffect(() => {
+    // Redirect to demo dashboard if not in live mode
+    if (!LIVE_MODE) {
+      router.replace("/dashboard/demo");
+    }
+  }, [router]);
+
+  // If not in live mode, don't render anything while redirecting
+  if (!LIVE_MODE) {
+    return null;
+  }
+
   return (
     <div className="container mx-auto px-4 py-8">
       <DashboardHeader />

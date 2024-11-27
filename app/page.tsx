@@ -1,7 +1,12 @@
+"use client";
+
 import Link from 'next/link';
 import { ArrowRight, Activity, Database } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+
+// Default to false if not set
+const LIVE_MODE = process.env.NEXT_PUBLIC_LIVE_MODE === "true";
 
 export default function Home() {
   return (
@@ -16,24 +21,26 @@ export default function Home() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-          <Card className="p-6 hover:shadow-lg transition-shadow">
-            <div className="flex flex-col h-full">
-              <div className="flex items-center mb-4">
-                <Activity className="h-6 w-6 text-primary mr-2" />
-                <h2 className="text-2xl font-semibold">Live Dashboard</h2>
+        <div className={`grid ${LIVE_MODE ? 'md:grid-cols-2' : 'md:grid-cols-1'} gap-8 max-w-4xl mx-auto`}>
+          {LIVE_MODE && (
+            <Card className="p-6 hover:shadow-lg transition-shadow">
+              <div className="flex flex-col h-full">
+                <div className="flex items-center mb-4">
+                  <Activity className="h-6 w-6 text-primary mr-2" />
+                  <h2 className="text-2xl font-semibold">Live Dashboard</h2>
+                </div>
+                <p className="text-muted-foreground mb-6 flex-grow">
+                  Access real-time Uniswap V3 metrics with live data from the blockchain.
+                </p>
+                <Link href="/dashboard/live" className="block">
+                  <Button className="w-full">
+                    Launch Live Dashboard
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </Link>
               </div>
-              <p className="text-muted-foreground mb-6 flex-grow">
-                Access real-time Uniswap V3 metrics with live data from the blockchain.
-              </p>
-              <Link href="/dashboard/live" className="block">
-                <Button className="w-full">
-                  Launch Live Dashboard
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
-            </div>
-          </Card>
+            </Card>
+          )}
 
           <Card className="p-6 hover:shadow-lg transition-shadow">
             <div className="flex flex-col h-full">

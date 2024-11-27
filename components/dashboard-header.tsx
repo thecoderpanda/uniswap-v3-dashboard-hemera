@@ -1,26 +1,51 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { AlertCircle, CheckCircle2 } from "lucide-react";
+import { AlertCircle, CheckCircle2, Info } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
 interface DashboardHeaderProps {
   isDemo?: boolean;
 }
 
+// Default to false if not set
+const LIVE_MODE = process.env.NEXT_PUBLIC_LIVE_MODE === "true";
+
 export function DashboardHeader({ isDemo = false }: DashboardHeaderProps) {
   const [syncStatus, setSyncStatus] = useState<"syncing" | "completed">("syncing");
   const [lastSynced, setLastSynced] = useState<Date>(new Date());
 
   useEffect(() => {
-    if (isDemo) {
+    // Only show syncing animation in demo mode or when LIVE_MODE is true
+    if (isDemo || LIVE_MODE) {
       const timer = setTimeout(() => {
         setSyncStatus("completed");
         setLastSynced(new Date());
-      }, 10000);
+      }, 5000);
       return () => clearTimeout(timer);
+    } else {
+      // Immediately set to completed for non-live mode
+      setSyncStatus("completed");
+      setLastSynced(new Date());
     }
   }, [isDemo]);
+
+  // If not in live mode and not demo, show the demo notice
+  if (!LIVE_MODE && !isDemo) {
+    return (
+      <div className="mb-8">
+        <div className="flex items-center justify-between mb-4">
+          <h1 className="text-3xl font-bold">Demo Dashboard</h1>
+        </div>
+        <Alert>
+          <Info className="h-4 w-4" />
+          <AlertDescription className="ml-2">
+            This is Demo UI. UDFs are not implemented, data that is served is cached.
+          </AlertDescription>
+        </Alert>
+      </div>
+    );
+  }
 
   return (
     <div className="mb-8">
@@ -41,9 +66,21 @@ export function DashboardHeader({ isDemo = false }: DashboardHeaderProps) {
           <CheckCircle2 className="h-4 w-4 text-green-500" />
         )}
         <AlertDescription className="ml-2">
-          {syncStatus === "syncing"
-            ? "Syncing with Hemera indexer, please wait..."
-            : "Successfully synced with Hemera indexer"}
+          {syncStatus === "syncing" ? (
+            isDemo ? (
+              "Loading cached demo data..."
+            ) : (
+              "Syncing with Hemera indexer, please wait..."
+            )
+          ) : (
+            <div className="flex items-center justify-between w-full">
+              <span>
+                {isDemo 
+                  ? "Demo data loaded. Connect to UDFs to fetch real-time data."
+                  : "Successfully synced with Hemera indexer"}
+              </span>
+            </div>
+          )}
         </AlertDescription>
       </Alert>
     </div>

@@ -7,7 +7,7 @@ import { SiteHeader } from "@/components/site-header";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Hemera Analytics - Uniswap V3",
+  title: "Hemera Protocol - Uniswap V3 Analytics",
   description: "Real-time analytics for Uniswap V3 powered by Hemera Protocol",
 };
 
@@ -21,7 +21,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
+          defaultTheme="light"
           enableSystem
           disableTransitionOnChange
         >
