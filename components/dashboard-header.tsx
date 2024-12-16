@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { AlertCircle, CheckCircle2, ChevronDown } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { useToast } from "@/components/ui/use-toast";
+
 import {
   Select,
   SelectContent,
@@ -28,18 +28,11 @@ export function DashboardHeader() {
   const [syncStatus, setSyncStatus] = useState<"syncing" | "completed">("syncing");
   const [lastSynced, setLastSynced] = useState<Date>(new Date());
   const [selectedChain, setSelectedChain] = useState<string>("ethereum");
-  const { toast } = useToast();
+
 
   const handleChainChange = (chainId: string) => {
     const chain = SUPPORTED_CHAINS.find(c => c.id === chainId);
-    if (chain?.disabled) {
-      toast({
-        variant: "destructive",
-        title: "Chain not supported",
-        description: `${chain.name} is not indexed yet, please stay tuned.`,
-      });
-      return;
-    }
+
     setSelectedChain(chainId);
   };
 
@@ -74,13 +67,13 @@ export function DashboardHeader() {
                 <SelectItem 
                   key={chain.id} 
                   value={chain.id}
-                  disabled={chain.disabled}
-                  className={chain.disabled ? "opacity-50 cursor-not-allowed" : ""}
+                  disabled={'disabled' in chain}
+                  className={'disabled' in chain ? "opacity-50 cursor-not-allowed" : ""}
                 >
                   <span className="flex items-center gap-2">
                     <span>{chain.icon}</span>
                     <span>{chain.name}</span>
-                    {chain.disabled && (
+                    {'disabled' in chain && (
                       <span className="text-xs text-muted-foreground ml-2">(Coming soon)</span>
                     )}
                   </span>
