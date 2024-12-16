@@ -1,5 +1,5 @@
 import { demoTokenPairs } from "@/lib/demo-data";
-import { PairDetails } from "@/components/pair-details";
+import { ClientPairPage } from "@/components/client-pair-page";
 
 export function generateStaticParams() {
   return demoTokenPairs.flatMap((pair) => [
@@ -13,5 +13,11 @@ export default function PairPage({
 }: {
   params: { type: string; id: string };
 }) {
-  return <PairDetails type={params.type} id={params.id} />;
+  const pair = demoTokenPairs.find((p) => p.id === params.id);
+  
+  if (!pair) {
+    return <div>Pair not found</div>;
+  }
+
+  return <ClientPairPage pair={pair} />;
 }
