@@ -1,7 +1,0 @@
-{
-  "/_not-found": "/_not-found",
-  "/page": "/",
-  "/dashboard/demo/page": "/dashboard/demo",
-  "/dashboard/live/page": "/dashboard/live",
-  "/dashboard/[type]/pair/[id]/page": "/dashboard/[type]/pair/[id]"
-}

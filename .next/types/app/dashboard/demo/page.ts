@@ -1,4 +1,4 @@
-// File: /Users/shantanuvishwanadha/Desktop/uniswap-v3-dashboard-hemera/app/dashboard/demo/page.tsx
+// File: /Users/thecoderpanda/Desktop/uniswap-v3-dashboard-hemera/app/dashboard/demo/page.tsx
 import * as entry from '../../../../../app/dashboard/demo/page.js'
 import type { ResolvingMetadata } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

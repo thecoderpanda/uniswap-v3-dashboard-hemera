@@ -2,13 +2,13 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
-import { SiteHeader } from "@/components/site-header";
+import { Toaster } from "@/components/toaster";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Hemera Protocol - Uniswap V3 Analytics",
-  description: "Real-time analytics for Uniswap V3 powered by Hemera Protocol",
+  title: "Uniswap V3 Dashboard",
+  description: "Analytics dashboard for Uniswap V3 powered by Hemera Protocol",
 };
 
 export default function RootLayout({
@@ -21,14 +21,12 @@ export default function RootLayout({
       <body className={inter.className}>
         <ThemeProvider
           attribute="class"
-          defaultTheme="light"
+          defaultTheme="system"
           enableSystem
           disableTransitionOnChange
         >
-          <div className="relative flex min-h-screen flex-col">
-            <SiteHeader />
-            <main className="flex-1">{children}</main>
-          </div>
+          {children}
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>

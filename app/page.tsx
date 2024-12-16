@@ -1,66 +1,78 @@
 "use client";
 
-import Link from 'next/link';
-import { ArrowRight, Activity, Database } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
 
-// Default to false if not set
-const LIVE_MODE = process.env.NEXT_PUBLIC_LIVE_MODE === "true";
+export default function LoginPage() {
+  const router = useRouter();
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
-export default function Home() {
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (username === "admin" && password === "admin") {
+      // In a real app, you'd want to set a proper auth token/session
+      localStorage.setItem("isAuthenticated", "true");
+      router.push("/dashboard");
+    } else {
+      setError("Invalid credentials");
+    }
+  };
+
   return (
-    <main className="min-h-screen bg-gradient-to-b from-background to-muted">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="text-center mb-16">
-          <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-6xl mb-4">
-            Uniswap V3 Analytics
-          </h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Powered by Hemera Protocol - Real-time insights and analytics for Uniswap V3
-          </p>
+    <div className="flex min-h-screen flex-col items-center justify-center p-4">
+      <div className="w-full max-w-md space-y-8">
+        <div className="text-center">
+          <h1 className="text-4xl font-bold">Uniswap V3 Dashboard</h1>
+          <p className="mt-2 text-gray-600 dark:text-gray-400">Sign in to continue</p>
         </div>
 
-        <div className={`grid ${LIVE_MODE ? 'md:grid-cols-2' : 'md:grid-cols-1'} gap-8 max-w-4xl mx-auto`}>
-          {LIVE_MODE && (
-            <Card className="p-6 hover:shadow-lg transition-shadow">
-              <div className="flex flex-col h-full">
-                <div className="flex items-center mb-4">
-                  <Activity className="h-6 w-6 text-primary mr-2" />
-                  <h2 className="text-2xl font-semibold">Live Dashboard</h2>
-                </div>
-                <p className="text-muted-foreground mb-6 flex-grow">
-                  Access real-time Uniswap V3 metrics with live data from the blockchain.
-                </p>
-                <Link href="/dashboard/live" className="block">
-                  <Button className="w-full">
-                    Launch Live Dashboard
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
-                </Link>
-              </div>
-            </Card>
+        <form onSubmit={handleLogin} className="mt-8 space-y-6">
+          {error && (
+            <Alert variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
           )}
-
-          <Card className="p-6 hover:shadow-lg transition-shadow">
-            <div className="flex flex-col h-full">
-              <div className="flex items-center mb-4">
-                <Database className="h-6 w-6 text-primary mr-2" />
-                <h2 className="text-2xl font-semibold">Demo Dashboard</h2>
-              </div>
-              <p className="text-muted-foreground mb-6 flex-grow">
-                Explore the dashboard features with demo data and simulated updates.
-              </p>
-              <Link href="/dashboard/demo" className="block">
-                <Button variant="outline" className="w-full">
-                  View Demo Dashboard
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
+          
+          <div className="space-y-4">
+            <div>
+              <label htmlFor="username" className="block text-sm font-medium mb-2">
+                Username
+              </label>
+              <Input
+                id="username"
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                required
+              />
             </div>
-          </Card>
-        </div>
+
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium mb-2">
+                Password
+              </label>
+              <Input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
+          </div>
+
+          <Button type="submit" className="w-full">
+            Sign in
+          </Button>
+        </form>
       </div>
-    </main>
+    </div>
   );
 }
