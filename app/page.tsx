@@ -6,22 +6,46 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
 
 export default function LoginPage() {
   const router = useRouter();
+  const { toast } = useToast();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     if (username === "admin" && password === "admin") {
+      setIsLoggingIn(true);
+      const toastId = toast({
+        title: "Logging in...",
+        description: "Redirecting to dashboard",
+        variant: "success",
+        duration: 1500,
+      });
+
       // In a real app, you'd want to set a proper auth token/session
       localStorage.setItem("isAuthenticated", "true");
+      
+      // Wait for animation and redirect
+      await new Promise(resolve => setTimeout(resolve, 1500));
       router.push("/dashboard");
     } else {
       setError("Invalid credentials");
     }
+  };
+
+  const loginAsAdmin = () => {
+    setUsername("admin");
+    setPassword("admin");
+    toast({
+      title: "Auto-filled credentials",
+      description: "Click 'Sign in' to continue",
+      duration: 2000,
+    });
   };
 
   return (
@@ -51,6 +75,7 @@ export default function LoginPage() {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 required
+                disabled={isLoggingIn}
               />
             </div>
 
@@ -64,13 +89,29 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                disabled={isLoggingIn}
               />
             </div>
           </div>
 
-          <Button type="submit" className="w-full">
-            Sign in
-          </Button>
+          <div className="space-y-4">
+            <Button 
+              type="submit" 
+              className="w-full"
+              disabled={isLoggingIn}
+            >
+              {isLoggingIn ? "Signing in..." : "Sign in"}
+            </Button>
+            <Button 
+              type="button" 
+              variant="outline" 
+              className="w-full"
+              onClick={loginAsAdmin}
+              disabled={isLoggingIn}
+            >
+              Login as Admin
+            </Button>
+          </div>
         </form>
       </div>
     </div>

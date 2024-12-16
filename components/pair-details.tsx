@@ -38,7 +38,7 @@ export function PairDetails({ type, id }: PairDetailsProps) {
         </div>
       </div>
 
-      <DashboardHeader isDemo={type === "demo"} />
+      <DashboardHeader />
 
       <div className="space-y-8">
         <div className="flex flex-col gap-4">

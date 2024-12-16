@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { AlertCircle, CheckCircle2, ChevronDown } from "lucide-react";
+import { AlertCircle, CheckCircle2, ChevronDown, LogOut } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { ThemeToggle } from "@/components/theme-toggle";
-
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -25,14 +26,18 @@ const SUPPORTED_CHAINS = [
 ] as const;
 
 export function DashboardHeader() {
+  const router = useRouter();
   const [syncStatus, setSyncStatus] = useState<"syncing" | "completed">("syncing");
   const [lastSynced, setLastSynced] = useState<Date>(new Date());
   const [selectedChain, setSelectedChain] = useState<string>("ethereum");
 
+  const handleLogout = () => {
+    localStorage.clear(); // Clear all localStorage items
+    router.push("/"); // Redirect to login page
+  };
 
   const handleChainChange = (chainId: string) => {
     const chain = SUPPORTED_CHAINS.find(c => c.id === chainId);
-
     setSelectedChain(chainId);
   };
 
@@ -82,6 +87,15 @@ export function DashboardHeader() {
             </SelectContent>
           </Select>
           <ThemeToggle />
+          <Button 
+            variant="ghost" 
+            size="icon"
+            onClick={handleLogout}
+            className="text-red-500 hover:text-red-700 hover:bg-red-100 dark:hover:bg-red-900/20"
+          >
+            <LogOut className="h-5 w-5" />
+            <span className="sr-only">Logout</span>
+          </Button>
         </div>
       </div>
       <Alert variant={syncStatus === "completed" ? "default" : "destructive"}>
